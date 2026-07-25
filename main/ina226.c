@@ -35,11 +35,14 @@ void i2c_init(void)
     ESP_ERROR_CHECK(i2c_driver_install(0, conf.mode, 0, 0, 0));
 }
 
+//当前使用的 INA226 I2C 地址（默认 0x40，扫描到后更新）
+static int s_ina226_addr = INA226_ADDR;
+
 static esp_err_t ina226_register_read(uint8_t reg_addr, uint16_t *data)
 {
     uint8_t buf[2] = {0};
     
-    esp_err_t ret = i2c_master_write_read_device(0, INA226_ADDR, &reg_addr, 1, buf, 2, 10);
+    esp_err_t ret = i2c_master_write_read_device(0, s_ina226_addr, &reg_addr, 1, buf, 2, 10);
     if (ret != ESP_OK) {
         Printf("read %02X failed\n",reg_addr);
         return ret;
@@ -54,7 +57,7 @@ static esp_err_t ina226_register_write(uint8_t reg_addr, uint16_t data)
 {
     uint8_t write_buf[3] = {reg_addr, data>>8, data&0xFF};
 
-    esp_err_t ret = i2c_master_write_to_device(0, INA226_ADDR, write_buf, sizeof(write_buf), 10);
+    esp_err_t ret = i2c_master_write_to_device(0, s_ina226_addr, write_buf, sizeof(write_buf), 10);
     if (ret != ESP_OK) {
         Printf("write %02X failed\n",reg_addr);
         return ret;
@@ -131,13 +134,49 @@ int ina226_set_cal(void)
 }
 
 
+//扫描 INA226 的 I2C 地址
+//遍历所有可能的地址（0x40~0x4F），读取 ID 寄存器
+//返回找到的地址，如果没找到返回 -1
+int ina226_scan_addr(void)
+{
+    uint8_t reg = INA226_REG_ID;
+    uint8_t buf[2];
+
+    Printf("Scanning INA226 address...\n");
+    for (int addr = INA226_ADDR_MIN; addr <= INA226_ADDR_MAX; addr++) {
+        esp_err_t ret = i2c_master_write_read_device(0, addr, &reg, 1, buf, 2, 10);
+        if (ret == ESP_OK) {
+            uint16_t id = buf[0] << 8 | buf[1];
+            Printf("  addr 0x%02X, ID:0x%04X\n", addr, id);
+            if (id == INA226_ID_NUM) {
+                Printf("  Found INA226 at 0x%02X!\n", addr);
+                return addr;
+            }
+        }
+    }
+    Printf("  INA226 not found!\n");
+    return -1;
+}
+
+
 int ina226_init(void)
 {
     i2c_init();
 
-    if (ina226_get_id() != INA226_ID_NUM) {
-        Printf("Not find ina226\n");
-        return -1;
+    //先尝试默认地址
+    if (ina226_get_id() == INA226_ID_NUM) {
+        s_ina226_addr = INA226_ADDR;
+        Printf("INA226 found at default addr 0x%02X\n", s_ina226_addr);
+    } else {
+        //默认地址找不到，扫描所有地址
+        Printf("Not find ina226 at default addr 0x%02X, scanning...\n", INA226_ADDR);
+        int addr = ina226_scan_addr();
+        if (addr < 0) {
+            Printf("INA226 not found!\n");
+            return -1;
+        }
+        s_ina226_addr = addr;
+        Printf("INA226 found at addr 0x%02X\n", s_ina226_addr);
     }
 
     ina226_register_write(INA226_REG_CONF, 0x456F); //AGV:16*CT:1.1ms
@@ -251,4 +290,3 @@ void ina226_task(void *param)
         vTaskDelay(50);
     }
 }
-
