@@ -68,3 +68,36 @@
       打开flash_download_tool
 - <img src="images/73d138bb98a7495ea6fc5c432dfbc446.png" alt="flash_download_tool" style="zoom:50%;" />
 
+### 编译注意事项
+
+#### 一：
+
+```
+W (250) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048kUsing the size in the binary image header.
+```
+
+
+
+1. 终端执行
+
+```
+idf.py menuconfig
+```
+
+1. 进入 
+
+   ```
+   Serial flasher config
+   ```
+
+   - `Flash size` → 设置为 `4 MB`
+
+2. 进入 
+
+   ```
+   Partition Table
+   ```
+
+   - Partition table 选择 `Single factory app, no OTA (4MB)` 或者自定义 4MB 分区 csv
+
+3. 保存退出，`idf.py flash` 重新烧录
