@@ -1,0 +1,23 @@
+{
+    "files.associations": {
+        "stm32f0xx.h": "c",
+        "pwm.h": "c",
+        "led.h": "c",
+        "tsc.h": "c",
+        "stm32f0xx_tsc_bits.h": "c",
+        "stdbool.h": "c",
+        "touch.h": "c",
+        "timer.h": "c",
+        "usart.h": "c",
+        "key.h": "c",
+        "clock.h": "c",
+        "light_control.h": "c",
+        "ntc.h": "c",
+        "compare": "c",
+        "cstdint": "c",
+        "settings.h": "c",
+        "math.h": "c",
+        "stm32f0xx_flash.h": "c",
+        "stdio.h": "c"
+    }
+}

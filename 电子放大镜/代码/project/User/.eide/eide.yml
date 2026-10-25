@@ -1,0 +1,267 @@
+version: "4.1"
+name: project
+type: ARM
+deviceName: STM32F072CBTx
+packDir: .pack/Keil/STM32F0xx_DFP.2.1.0
+srcDirs: []
+virtualFolder:
+  name: <virtual_root>
+  files: []
+  folders:
+    - name: Startup
+      files:
+        - path: ../Startup/startup_stm32f072.s
+        - path: ../Startup/system_stm32f0xx.c
+      folders: []
+    - name: Library
+      files:
+        - path: ../Library/src/stm32f0xx_adc.c
+        - path: ../Library/src/stm32f0xx_can.c
+        - path: ../Library/src/stm32f0xx_cec.c
+        - path: ../Library/src/stm32f0xx_comp.c
+        - path: ../Library/src/stm32f0xx_crc.c
+        - path: ../Library/src/stm32f0xx_crs.c
+        - path: ../Library/src/stm32f0xx_dac.c
+        - path: ../Library/src/stm32f0xx_dbgmcu.c
+        - path: ../Library/src/stm32f0xx_dma.c
+        - path: ../Library/src/stm32f0xx_exti.c
+        - path: ../Library/src/stm32f0xx_flash.c
+        - path: ../Library/src/stm32f0xx_gpio.c
+        - path: ../Library/src/stm32f0xx_i2c.c
+        - path: ../Library/src/stm32f0xx_iwdg.c
+        - path: ../Library/src/stm32f0xx_misc.c
+        - path: ../Library/src/stm32f0xx_pwr.c
+        - path: ../Library/src/stm32f0xx_rcc.c
+        - path: ../Library/src/stm32f0xx_rtc.c
+        - path: ../Library/src/stm32f0xx_spi.c
+        - path: ../Library/src/stm32f0xx_syscfg.c
+        - path: ../Library/src/stm32f0xx_tim.c
+        - path: ../Library/src/stm32f0xx_usart.c
+        - path: ../Library/src/stm32f0xx_wwdg.c
+      folders: []
+    - name: Hardware
+      files:
+        - path: ../Hardware/led/led.c
+        - path: ../Hardware/touch/touch.c
+        - path: ../Hardware/light_control/light_control.c
+        - path: ../Hardware/ntc/ntc.c
+      folders: []
+    - name: System
+      files:
+        - path: ../System/pwm/pwm.c
+        - path: ../System/tsc/tsc.c
+        - path: ../System/timer/timer.c
+        - path: ../System/usart/usart.c
+        - path: ../System/clock/clock.c
+        - path: ../System/settings/settings.c
+      folders: []
+    - name: User
+      files:
+        - path: main.c
+        - path: stm32f0xx_it.c
+      folders: []
+dependenceList: []
+outDir: build
+miscInfo:
+  uid: 4a74c7abefc37b10122136d5f703d733
+targets:
+  Target_1:
+    cppPreprocessAttrs:
+      defineList:
+        - STM32F072
+        - USE_STDPERIPH_DRIVER
+        - STM32F072xB
+      incList:
+        - ../Startup
+        - ../Library/inc
+        - ../Library/src
+        - .
+        - .cmsis/include
+        - RTE/_Target_1
+        - ../System/pwm
+        - ../Hardware/led
+        - ../System/tsc
+        - ../Hardware/touch
+        - ../System/timer
+        - ../System/usart
+        - ../System/clock
+        - ../Hardware/light_control
+        - ../Hardware/ntc
+        - ../System/settings
+      libList: []
+    excludeList: []
+    settings:
+      debugger: cortex-debug
+    toolchain: AC5
+    toolchainConfigMap:
+      AC5:
+        archExtensions: ""
+        cpuType: Cortex-M0
+        floatingPointHardware: none
+        options:
+          version: 4
+          afterBuildTasks: []
+          asm-compiler: {}
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: --diag_suppress=1 --diag_suppress=1295
+            C_FLAGS: --diag_suppress=1 --diag_suppress=1295
+            c99-mode: true
+            one-elf-section-per-function: true
+            optimization: level-0
+            warnings: unspecified
+          global:
+            output-debug-info: enable
+            use-microLIB: true
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            output-format: elf
+        scatterFilePath: <YOUR_SCATTER_FILE>.sct
+        storageLayout:
+          RAM:
+            - id: 1
+              isChecked: true
+              mem:
+                size: "0x5000"
+                startAddr: "0x20000000"
+              noInit: false
+              tag: IRAM
+          ROM:
+            - id: 1
+              isChecked: true
+              isStartup: true
+              mem:
+                size: "0x10000"
+                startAddr: "0x08000000"
+              tag: IROM
+        useCustomScatterFile: false
+      AC6:
+        archExtensions: ""
+        cpuType: Cortex-M0
+        floatingPointHardware: none
+        options:
+          version: 3
+          afterBuildTasks: []
+          asm-compiler:
+            $use: asm-auto
+            defines: []
+            misc-controls: ""
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            language-c: c99
+            language-cpp: c++11
+            link-time-optimization: false
+            one-elf-section-per-function: true
+            optimization: level-0
+            short-enums#wchar: true
+            warnings: all-warnings
+          global:
+            output-debug-info: enable
+            use-microLIB: false
+          linker:
+            $disableOutputTask: false
+            $outputTaskExcludes:
+              - .bin
+              - .s19
+            misc-controls: --diag_suppress=L6329
+            output-format: elf
+            ro-base: "0x08000000"
+            rw-base: "0x20000000"
+            xo-base: ""
+        scatterFilePath: ""
+        storageLayout:
+          RAM:
+            - id: 1
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 3
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 1
+              isChecked: true
+              mem:
+                size: "0x4000"
+                startAddr: "0x20000000"
+              noInit: false
+              tag: IRAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: IRAM
+          ROM:
+            - id: 1
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 3
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 1
+              isChecked: true
+              isStartup: true
+              mem:
+                size: "0x20000"
+                startAddr: "0x8000000"
+              tag: IROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: IROM
+        useCustomScatterFile: false
+    uploadConfigMap:
+      JLink:
+        baseAddr: ""
+        bin: ""
+        cpuInfo:
+          cpuName: "null"
+          vendor: "null"
+        otherCmds: ""
+        proType: 1
+        speed: 8000
+      STLink:
+        address: "0x08000000"
+        bin: ""
+        elFile: None
+        optionBytes: .eide/target_1.st.option.bytes.ini
+        otherCmds: ""
+        proType: SWD
+        resetMode: default
+        runAfterProgram: true
+        speed: 4000
+    uploader: STLink
