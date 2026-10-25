@@ -1,5 +1,13 @@
 # jlc-reproduce-project
 
-### Electronic Load Project
+### Electronic-load
 
-这是一个基于 ESP32 的电子负载控制程序，适用于带有 160x80 TFT 显示屏、INA226 电量监测芯片、MCP4725 DAC 和旋转编码器的测试平台。
+嘉立创开源广场主页：https://oshwhub.com/oliverluo/dian-zi-fu-zai-yiv1-0_copy
+
+ 基于ESP32+INA226的小功率电子负载仪；支持DC，TYPE C，和4线接口 。 
+
+### 电子放大镜
+
+嘉立创开源广场主页： [PCB 电子显微镜 - 立创开源硬件平台](https://oshwhub.com/si_yuan/project_zgsbdccb) 
+
+ 简介：这是一个桌面PCB电子显微镜的完整方案，改造了c口以及灯板供电，日常使用更加方便。 
