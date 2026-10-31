@@ -65,11 +65,48 @@
 
 ## 使用方法
 
-1. 在 Arduino IDE 或 PlatformIO 中打开 `01 Software/ele_load/ele_load.ino`。
-2. 安装上述依赖库。
-3. 根据实际硬件连接调整引脚定义和 I2C 地址。
-4. 将程序上传到 ESP32。
-5. 连接 INA226、电源负载和显示屏，并旋转编码器调整设定值。
+### 通过 VS Code 编译并上传
+
+本项目使用 Arduino 草图格式。可以在 VS Code 集成终端中使用 Arduino CLI 编译和上传：
+
+1. 安装 [Arduino CLI](https://arduino.github.io/arduino-cli/)；也可以安装 VS Code 的 Arduino 扩展，便于在编辑器中使用相关命令。
+2. 在 VS Code 中打开 `01 Software/ele_load` 文件夹（其中包含 `ele_load.ino`），然后在终端安装 ESP32 Arduino 核心：
+
+   ```powershell
+   arduino-cli core update-index
+   arduino-cli core install esp32:esp32
+   ```
+
+3. 安装项目依赖库。LVGL 需使用 7.x 版本，因为代码使用了 LVGL 7 的 API：
+
+   ```powershell
+   arduino-cli lib install "TFT_eSPI"
+   arduino-cli lib install "lvgl@7.11.0"
+   arduino-cli lib install "INA"
+   arduino-cli lib install "Bounce2"
+   ```
+
+   `Wire`、`SPI` 和 `Ticker` 通常由 ESP32 Arduino 核心提供。`lv_examples` 和 `MD_REncoder` 需要根据其实际来源补齐，并使用与 LVGL 版本兼容的 `lv_examples`。当前仓库的草图目录没有 `MD_REncoder.h`，缺少此文件会导致编译失败。
+
+4. 配置 `TFT_eSPI` 的屏幕驱动和引脚，使其与实际 TFT 屏幕及硬件连接一致。根据实际开发板调整代码中的引脚定义和 I2C 地址。
+5. 连接开发板，在终端查看串口和端口：
+
+   ```powershell
+   arduino-cli board list
+   ```
+
+6. 按实际开发板型号和串口替换下面示例中的 `esp32:esp32:esp32` 和 `COM5`，然后编译并上传：
+
+   ```powershell
+   arduino-cli compile --fqbn esp32:esp32:esp32 "D:\github\jlc-reproduce-project\Electronic-load\01 Software\ele_load"
+   arduino-cli upload -p COM5 --fqbn esp32:esp32:esp32 "D:\github\jlc-reproduce-project\Electronic-load\01 Software\ele_load"
+   ```
+
+   例如 ESP32-S3 等不同型号应选择对应的 FQBN。若上传时无法连接，尝试在上传开始时按住开发板的 BOOT 键，待上传开始后松开。
+
+7. 上传成功后，可通过串口监视器以 `115200` 波特率查看程序输出。首次验证时先不要连接电池或功率负载；确认开发板、显示屏和外围接线正常后，再连接负载。
+
+也可以使用 Arduino IDE 打开 `01 Software/ele_load/ele_load.ino`，安装相同依赖、选择正确的 ESP32 开发板和端口后编译上传。
 
 ## 备注
 
