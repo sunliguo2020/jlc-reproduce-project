@@ -1,0 +1,33 @@
+# VS Code and IDE settings
+.vscode/
+.vs/
+*.code-workspace
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Build outputs
+build/
+build-*/
+out/
+obj/
+*.o
+*.obj
+*.elf
+*.map
+
+# Arduino and PlatformIO generated files
+arduino_build_*/
+arduino_cache_*/
+.pio/
+pioenvs/
+piolibdeps/
+
+# Temporary files and logs
+*.log
+*.tmp
+*.bak
+*.swp
+*~
