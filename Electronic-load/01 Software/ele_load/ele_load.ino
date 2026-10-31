@@ -14,6 +14,7 @@
 #define OUT_EN_PIN  25
 #define FAN_CTL_PIN 14
 
+// 当前固件未驱动该引脚；GPIO26 同时用于编码器按键，不能兼作背光控制。
 #define LCD_BL      26
 
 #define PinA 19  // 左键引脚
@@ -115,6 +116,7 @@ void time_update_task()
 int get_cur_average(int cur)
 {
 #define NUM   10  
+  // 对最近 10 次电流采样取平均，降低显示抖动；启动时缓存为零，初期均值会偏低。
   static int buff[NUM];
   static char p = 0;
   char i;
@@ -147,6 +149,7 @@ void ina266_task()
   {
     ms = millis();
    
+    // 每 200 ms 更新测量值、能量累计和温度/风扇状态。
     if((ms - lastMillis) >= 200 )
     {
       vol = INA.getBusMilliVolts(deviceNumber);
@@ -155,6 +158,7 @@ void ina266_task()
       ms = ms - lastMillis;
       lastMillis = millis();
   
+      // 超过 20 A 的读数按异常值处理，不参与显示。
       if(cur > 20*1000)
         cur = 0;
   
@@ -183,6 +187,7 @@ void ina266_task()
       lv_label_set_text(pow_label,tmp);
 
       
+      // wH 暂存的是 W·ms；显示时除以 3,600,000 转为 Wh。
       wH += w*ms;
       //if(wH >10)
         sprintf(tmp,"#00FF00 %0.2f", wH/(60*60*1000));
@@ -193,6 +198,7 @@ void ina266_task()
       sprintf(tmp,"vol:%0.3fV cur:%0.3fA, power:%0.3fW %0.3fwh\n", v, a, w,wH/(60*60*1000));
       //Serial.print(tmp);
 
+      // 热敏电阻分压值换算为电阻，再通过 B3950 表查温度。
       adc_temp = analogRead(38);
       vol_temp = 3419*adc_temp/4095;
       res_temp = 3419*100*10/vol_temp-100*10;
@@ -226,6 +232,7 @@ void ina266_task()
       if(tempture >= 90)
       {
         // disable output
+        // 过温保护：强制关闭负载输出。
         power_on = false;
         digitalWrite(OUT_EN_PIN,HIGH);
         lv_label_set_text(onoff_label,"#0000FF OFF");
@@ -243,6 +250,7 @@ void ina266_task()
         }
       }
 
+      // 风扇开启阈值为 50°C，关闭阈值为 45°C，形成回差以避免频繁切换。
       if(tempture >= 50)
       {
         //ledcWrite(0,1023);
@@ -313,6 +321,7 @@ uint8_t Encoder_Scan()
 // 编码器状态更新函数
 static bool my_encoder_read( lv_indev_drv_t * indev_driver, lv_indev_data_t * data )
 {
+  // LVGL 编码器输入需要保留最近一次按键码，并用 enc_diff 表示旋转方向。
   static uint32_t last_key = 0;
   uint8_t act_enc = Encoder_Scan();
 
@@ -365,6 +374,7 @@ void lv_port_indev_init(void)
 }
 
 
+// 将 LVGL 的局部刷新区域写入 TFT，完成后通知 LVGL 可复用缓冲区。
 /* Display flushing */
 void my_disp_flush(lv_disp_drv_t* disp, const lv_area_t* area, lv_color_t* color_p)
 {
@@ -389,6 +399,7 @@ static void list_event_handler(lv_obj_t * obj, lv_event_t event)
 void ui_init()
 {
   /*Initialize the display*/
+  // 注册 160x80 显示驱动；flush_cb 负责把 LVGL 绘制内容传给 TFT。
   lv_disp_drv_t disp_drv;
   lv_disp_drv_init(&disp_drv);
   disp_drv.hor_res = 160;
@@ -544,6 +555,7 @@ void setup()
 {
 	Serial.begin(115200); /* prepare for possible serial debug */ 
 
+  // 上电默认关闭负载，并将风扇控制输出设为低电平。
   pinMode(OUT_EN_PIN, OUTPUT);
   digitalWrite(OUT_EN_PIN,HIGH);
 
@@ -570,6 +582,7 @@ void setup()
 	lv_log_register_print_cb(my_print); /* register print function for debugging */
 #endif
 
+	// TFT_eSPI 的控制器和引脚需由其 User_Setup 与实际硬件匹配。
 	tft.begin(); /* TFT init */
 	tft.setRotation(3); /* mirror */
 
@@ -579,6 +592,7 @@ void setup()
 
   ui_init();
 
+// 初始化 MCP4725 输出为零；DAC 地址由 MCP4725_ADDR 指定。
 #if 1  
   Wire.begin();
   Wire.beginTransmission(MCP4725_ADDR);
@@ -593,6 +607,7 @@ void setup()
   Wire.begin();
   uint8_t devicesFound = 0;
   //lv_label_set_text(label1,"INA226 Init...");
+  // INA226 未被识别时会持续重试，因此 setup() 不会结束，loop() 也不会运行。
   while (deviceNumber == UINT8_MAX)  // Loop until we find the first device
   {
     devicesFound = INA.begin(10, 5000);  // +/- 1 Amps maximum for 0.01 Ohm resistor
@@ -652,6 +667,7 @@ void button_handle_task()
         if(power_on)
         {
             // enable output
+            // 按键切换负载状态；LOW 为使能电平（以板上驱动电路为准）。
             digitalWrite(OUT_EN_PIN,LOW); 
             lv_label_set_text(onoff_label,"#00FF00 ON"); 
 
@@ -661,6 +677,7 @@ void button_handle_task()
         else
         {
             // disable output
+            // HIGH 为关闭负载输出。
             digitalWrite(OUT_EN_PIN,HIGH); 
             lv_label_set_text(onoff_label,"#0000FF OFF"); 
         }
@@ -669,6 +686,7 @@ void button_handle_task()
     }
     case 2:
     { 
+      // 旋钮顺时针增加 DAC 码值，每次步进 10。
       curre+=10; 
 
       Serial.printf("curre:%d\n", curre);  
@@ -684,6 +702,7 @@ void button_handle_task()
     }
     case 3:
     {
+      // 旋钮逆时针降低 DAC 码值，最低限制为 0。
       if(curre>10)
         curre-=10;
 
@@ -704,6 +723,7 @@ void button_handle_task()
 
 void loop()
 {
+	// 主循环周期性处理 LVGL、测量与按键；短延时让出处理时间。
 	lv_task_handler(); /* let the GUI do its work */
   
   ina266_task();
