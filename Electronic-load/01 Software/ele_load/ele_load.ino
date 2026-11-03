@@ -1,6 +1,5 @@
 #include <lvgl.h>
 #include <TFT_eSPI.h>
-#include <lv_examples/lv_examples.h>
 #include <Wire.h>
 #include <Bounce2.h>
 #include <INA.h>
@@ -585,12 +584,31 @@ void setup()
 
   Wire.begin();
   uint8_t devicesFound = 0;
+  Serial.println(F("Scanning INA I2C addresses 0x40-0x4F:"));
+  for (uint8_t address = 0x40; address <= 0x4F; address++)
+  {
+    Wire.beginTransmission(address);
+    uint8_t error = Wire.endTransmission();
+    Serial.printf("  0x%02X: %s\n", address, error == 0 ? "ACK" : "no response");
+  }
   // lv_label_set_text(label1,"INA226 Init...");
   // INA226 未被识别时会持续重试，因此 setup() 不会结束，loop() 也不会运行。
   while (deviceNumber == UINT8_MAX) // Loop until we find the first device
   {
     devicesFound = INA.begin(10, 5000); // +/- 1 Amps maximum for 0.01 Ohm resistor
-    Serial.println(INA.getDeviceName(devicesFound - 1));
+    if (devicesFound == 0)
+    {
+      Serial.println(F("INA.begin() found no supported devices."));
+    }
+    else
+    {
+      for (uint8_t i = 0; i < devicesFound; i++)
+      {
+        Serial.printf("Found I2C sensor at 0x%02X: ",
+                      INA.getDeviceAddress(i));
+        Serial.println(INA.getDeviceName(i));
+      }
+    }
     for (uint8_t i = 0; i < devicesFound; i++)
     {
       /* Change the "INA226" in the following statement to whatever device you have attached and
