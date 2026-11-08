@@ -191,9 +191,17 @@ void ina266_task()
       // Serial.print(tmp);
 
       // 热敏电阻分压值换算为电阻，再通过 B3950 表查温度。
+      // 采样为 0 时会产生 vol_temp = 0，后续除法会触发 ESP32 IntegerDivideByZero Panic。
       adc_temp = analogRead(38);
       vol_temp = 3419 * adc_temp / 4095;
-      res_temp = 3419 * 100 * 10 / vol_temp - 100 * 10;
+      if (vol_temp <= 0)
+      {
+        res_temp = 0;
+      }
+      else
+      {
+        res_temp = 3419 * 100 * 10 / vol_temp - 100 * 10;
+      }
       // Serial.println(res_temp);
 
       sprintf(tmp, "#00FF00 %d", tempture);
@@ -585,7 +593,7 @@ void setup()
   Wire.begin();
   uint8_t devicesFound = 0;
   Serial.println(F("Scanning INA I2C addresses 0x40-0x4F:"));
-  for (uint8_t address = 0x40; address <= 0x4F; address++)
+  for (uint8_t address = 0x08; address <= 0x77; address++)
   {
     Wire.beginTransmission(address);
     uint8_t error = Wire.endTransmission();
