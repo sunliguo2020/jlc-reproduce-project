@@ -33,6 +33,33 @@
 - 通过PMOS控制ADC采集的通断，减少ADC电池电压不采集时的漏电流；
 - 通过一个ME6210A33PG的LDO进行3.3v降压供电，供电电流500ma，低压降LDO；
 
+#### 项目中 GUI Guider 生成的代码结构
+
+```
+components/GUI/
+├── CMakeLists.txt              # 构建配置，GLOB_RECURSE 收集所有 .c
+├── custom/                     # ★ 用户自定义代码（不会被覆盖）
+│   ├── custom.c/h              # 自定义逻辑入口 custom_init()
+│   └── lv_conf_ext.h           # 自定义 LVGL 配置覆盖
+└── generated/                  # ★ 自动生成代码（Generate Code 会覆盖）
+    ├── gui_guider.c/h           # 主入口：setup_ui()、动画辅助函数
+    ├── events_init.c/h          # 事件回调注册
+    ├── widgets_init.c/h         # 控件初始化辅助
+    ├── setup_scr_screen_main.c          # 主屏幕基础层
+    ├── setup_scr_screen_main_time.c/h   # 时间区域
+    ├── setup_scr_screen_main_top_bar.c/h # 顶部状态栏
+    ├── setup_scr_screen_main_bottom.c/h  # 底部区域
+    ├── setup_scr_screen_main_temp_humi.c/h # 温湿度区域
+    ├── setup_scr_screen_sleep.c         # 休眠屏
+    ├── guider_fonts/            # 字体文件（SMG、SourceHanSans、Montserrat等）
+    ├── guider_customer_fonts/   # 自定义字体
+    └── images/                  # 图片资源（C 数组格式）
+```
+
+
+
+
+
 ## 复刻过程
 
 #### 1、将pcb中所有的0402封装更换为0603封装
