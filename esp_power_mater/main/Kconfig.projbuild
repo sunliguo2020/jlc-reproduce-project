@@ -1,0 +1,19 @@
+menu "Example Configuration"
+
+    config ESC
+        bool "Electronic speed controller"
+        default n
+
+    config ADC_KEY
+        bool "ADC Key"
+        default n
+    
+    config LCD
+        bool "Use 1.47inch LCD"
+        default n
+
+    config 80V
+        bool "Voltage 80V"
+        default n
+
+endmenu

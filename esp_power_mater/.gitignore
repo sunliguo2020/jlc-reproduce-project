@@ -1,0 +1,41 @@
+# Build output
+/build/
+/bootloader/build/
+
+# SDK configuration
+sdkconfig
+sdkconfig.old
+sdkconfig.*.old
+
+# ESP-IDF managed components
+/.idf_component.yml
+/managed_components/
+
+# VS Code settings
+.vscode/
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# CMake and Ninja artifacts
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+Makefile
+build.ninja
+
+# Python cache
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

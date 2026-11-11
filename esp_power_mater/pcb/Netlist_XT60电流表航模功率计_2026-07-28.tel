@@ -1,0 +1,94 @@
+$PACKAGES
+BUZ-SMD_4P-L5_0-W5_0-P3_80-TL ! BUZ-SMD_4P-L5_0-W5_0-P3_80-TL ! '{Value}' ; ,
+        BUZZER1 
+C0603 ! C0603 ! '{Value}' ; C1 C2 C3 C5 C7 C8 C9 C10 C11 C13 C16 C17 
+CAP-SMD_BD5_0-L5_3-W5_3-FD ! CAP-SMD_BD5_0-L5_3-W5_3-FD ! '{Value}' ; C4 
+CASE-A_3216 ! CASE-A_3216 ! '{Value}' ; C14 
+CONN-TH_XT60PW-M ! CONN-TH_XT60PW-M ! '{Value}' ; CN1 
+,
+        FPC-SMD_16P-P0_50_FPC-05F-16PH20 ! FPC-SMD_16P-P0_50_FPC-05F-16PH20 ! '{Value}' ,
+        ; FPC1 
+,
+        HDR-SMD_4P-P1_27-V-F-R2-C2-LS4_8 ! HDR-SMD_4P-P1_27-V-F-R2-C2-LS4_8 ! '{Value}' ,
+        ; H6 H7 H8 
+,
+        HDR-SMD_4P-P1_27-V-M-R2-C2-LS5_3 ! HDR-SMD_4P-P1_27-V-M-R2-C2-LS5_3 ! '{Value}' ,
+        ; U6 U7 U8 
+,
+        HDR-TH_3P-P2_54-V-M_PZ254V-11-03P ! HDR-TH_3P-P2_54-V-M_PZ254V-11-03P ! '{Value}' ,
+        ; H1 
+IND-SMD_L4_0-W4_0 ! IND-SMD_L4_0-W4_0 ! '{Value}' ; L1 
+KEY-SMD_TX-1010-X-X ! KEY-SMD_TX-1010-X-X ! '{Value}' ; SW1 SW2 SW3 
+,
+        MSOP-10_L3_0-W3_0-P0_50-LS5_0-BL ! MSOP-10_L3_0-W3_0-P0_50-LS5_0-BL ! '{Value}' ,
+        ; U2 
+R0402 ! R0402 ! '{Value}' ; R4 R8 
+R0402 ! R0402 ! '4.7kΩ' ; R6 R9 
+R0603 ! R0603 ! '{Value}' ; R1 R2 R5 R11 
+R0603 ! R0603 ! '1kΩ' ; R10 
+R0603 ! R0603 ! '4.7kΩ' ; R7 
+RES-SMD_L10_0-W5_2 ! RES-SMD_L10_0-W5_2 ! '{Value}' ; R3 
+SMA_L4_4-W2_8-LS5_4-RD ! SMA_L4_4-W2_8-LS5_4-RD ! '{Value}' ; D3 
+SOD-123F_L2_7-W1_6-LS3_8-RD-1 ! SOD-123F_L2_7-W1_6-LS3_8-RD-1 ! '{Value}' ; D2 ,
+        D4 
+SOD-123F_L2_8-W1_8-LS3_7-RD ! SOD-123F_L2_8-W1_8-LS3_7-RD ! '{Value}' ; D1 
+,
+        SOT-23-3_L2_9-W1_3-P1_90-LS2_4-BR ! SOT-23-3_L2_9-W1_3-P1_90-LS2_4-BR ! '{Value}' ,
+        ; Q1 
+,
+        SOT-23-5_L3_0-W1_7-P0_95-LS2_8-BL ! SOT-23-5_L3_0-W1_7-P0_95-LS2_8-BL ! '{Value}' ,
+        ; U5 
+TH_2P-XT60PW-F ! TH_2P-XT60PW-F ! '{Value}' ; U3 
+,
+        TSOT-23-6_L2_9-W1_6-P0_95-LS2_8-BL ! TSOT-23-6_L2_9-W1_6-P0_95-LS2_8-BL ! '{Value}' ,
+        ; U4 
+,
+        WIFI-SMD_L18_0-W14_3_ESP32-C3-WROOM-02U-N4 ! WIFI-SMD_L18_0-W14_3_ESP32-C3-WROOM-02U-N4 ! '{Value}' ,
+        ; U1 
+$A_PROPERTIES
+$NETS
+'+5V' ; C14.1 D1.1 L1.2 U4.1 U5.1 U5.3 
+'$1N11' ; CN1.1 R4.1 R8.2 U3.4 
+'$1N15' ; R2.2 U1.7 
+'$1N29' ; FPC1.9 R5.2 
+'$1N34' ; C9.1 FPC1.13 
+'$1N35' ; C9.2 FPC1.14 
+'$1N36' ; C3.2 FPC1.10 
+'$1N48' ; BUZZER1.2 D4.1 Q1.3 
+'$1N49' ; Q1.1 R10.1 R11.1 
+'$1N55' ; C7.1 L1.1 U4.5 
+'$1N56' ; C7.2 U4.6 
+'$1N68' ; FPC1.7 R7.2 
+'$1N70' ; C8.1 FPC1.15 
+'$1N71' ; C8.2 FPC1.16 
+'$1N73' ; C13.1 FPC1.11 
+'3.3V' ; BUZZER1.1 C2.2 C5.2 H8.1 H8.2 R1.1 R2.1 R6.1 R9.2 U1.1 U2.6 
+'O_CS' ; H7.3 U1.10 
+'O_DC' ; H7.1 U1.3 
+'O_RES' ; H8.3 U1.4 
+'O_SCLK' ; H7.4 U1.5 
+'O_SDIN' ; H7.2 U1.6 
+'V3.3' ; C10.1 C11.1 C16.1 FPC1.3 FPC1.12 U5.5 U7.1 U7.2 
+'VIN-' ; C17.1 R3.2 U2.8 U2.9 U3.3 
+'VIN+' ; C17.2 CN1.2 D2.2 D3.1 R3.1 U2.10 
+BUZZER ; R10.2 U1.16 
+CS ; FPC1.6 U8.1 
+DC ; FPC1.5 U8.3 
+EN ; C1.2 R1.2 U1.2 
+GND ; C1.1 C2.1 C3.1 C4.2 C5.1 C10.2 C11.2 C13.2 C14.2 C16.2 D1.2 D3.2 D4.2 ,
+        FPC1.8 H1.3 H6.3 H6.4 H8.4 Q1.2 R4.2 R5.1 R7.1 R8.1 R11.2 SW1.1 SW2.1 ,
+        SW3.2 U1.9 U2.1 U2.2 U2.7 U4.4 U5.2 U6.1 U6.2 U7.3 
+LEFT ; SW3.1 U1.15 
+RES ; FPC1.4 U7.4 
+RIGHT ; SW2.2 U1.8 
+RX ; H1.1 U1.11 
+SCL ; R9.1 U1.18 U2.5 
+SCLK ; FPC1.2 U8.2 
+SDA ; R6.2 U1.17 U2.4 
+SDIN ; FPC1.1 U8.4 
+SET ; SW1.2 U1.13 
+TX ; H1.2 U1.12 
+VCC ; C4.1 D2.1 H6.1 H6.2 
+VIN ; U4.2 U4.3 U6.3 U6.4 
+$SCHEDULE
+$END
