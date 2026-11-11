@@ -46,7 +46,7 @@
 
 - `OUT_EN_PIN`：25，负载输出使能
 - `FAN_CTL_PIN`：14，风扇控制
-- `LCD_BL`：26（代码中定义但未使用；GPIO26 同时作为编码器按键输入，不要用它驱动背光）
+- LCD 背光：按 2026-11-09 前面板网表，屏幕 LEDA 经 R4（15 Ω）接 3.3 V，由硬件供电；GPIO26 是编码器按键，不用于背光控制
 - `PinA`：19，旋转编码器 A
 - `PinB`：23，旋转编码器 B
 - `PinC`：26，旋转编码器按键
@@ -59,13 +59,12 @@
 
 - `lvgl`
 - `TFT_eSPI`
-- `lv_examples`
 - `Wire`
 - `Bounce2`
-- `INA.h`
+- `INA.h`  INA2xx
 - `SPI`
 - `Ticker`
-- `MD_REncoder`
+- `MD_REncoder 旋转编码器
 
 ## 使用方法
 
@@ -90,9 +89,10 @@
    arduino-cli lib install "Bounce2"
    ```
 
-   `Wire`、`SPI` 和 `Ticker` 通常由 ESP32 Arduino 核心提供。`lv_examples` 和 `MD_REncoder` 需要根据其实际来源补齐，并使用与 LVGL 版本兼容的 `lv_examples`。当前仓库的草图目录没有 `MD_REncoder.h`，缺少此文件会导致编译失败。
+   `Wire`、`SPI` 和 `Ticker` 通常由 ESP32 Arduino 核心提供。草图不依赖 `lv_examples`。`MD_REncoder` 需要根据其实际来源补齐；当前仓库的草图目录没有 `MD_REncoder.h`，缺少此文件会导致编译失败。
 
-4. 配置 `TFT_eSPI` 的屏幕控制器、分辨率和 SPI 引脚，使其与实际 TFT 屏幕及硬件连接一致。本仓库未提供适用于所有板卡的 `TFT_eSPI` `User_Setup`；V1.2 原理图中的 LCD_MOSI 网络及背光也有待按实际 PCB 核实，详见[接线说明](./接线说明.md)。固件使用 `Wire.begin()`，若所选开发板的 I2C 默认引脚与 PCB 不同，需在代码中显式配置 SDA/SCL。
+4. 草图会在 `TFT_eSPI.h` 之前包含同目录的 `TFT_Config.h`，用它配置控制器、分辨率和 SPI 引脚；请按实际屏幕、板卡和接线核对/修改此文件。LCD_MOSI 与背光接线需按实际 PCB 网表核实；2026-11-09 前面板网表将屏幕 LEDA 经 15 Ω 电阻接至 3.3 V，详见[接线说明](./接线说明.md)。固件使用 `Wire.begin()`，若所选开发板的 I2C 默认引脚与 PCB 不同，需在代码中显式配置 SDA/SCL。
+   若要排除 LVGL，临时将 `ele_load.ino` 顶部的 `TFT_DIAGNOSTIC_TEST` 改为 `1` 后上传。此模式只初始化 `TFT_eSPI`，显示文字和彩色条，不编译/运行 LVGL 或负载控制代码；测试完成后改回 `0` 并重新上传正式固件。
 5. 连接开发板，在终端查看串口和端口：
 
    ```powershell

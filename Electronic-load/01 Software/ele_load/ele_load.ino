@@ -1,5 +1,42 @@
-#include <lvgl.h>
+#include "TFT_Config.h"
 #include <TFT_eSPI.h>
+
+// Set to 1 to test the TFT directly, without compiling or initializing LVGL.
+#define TFT_DIAGNOSTIC_TEST 1
+
+#if TFT_DIAGNOSTIC_TEST
+
+TFT_eSPI tft = TFT_eSPI();
+
+void setup()
+{
+  Serial.begin(115200);
+  tft.init();
+  tft.setRotation(3);
+
+  setup_t tftSetup;
+  tft.getSetup(tftSetup);
+  Serial.printf("TFT_eSPI %s, driver 0x%03X, %u x %u\n",
+                tftSetup.version.c_str(), (unsigned int)tftSetup.tft_driver,
+                (unsigned int)tftSetup.tft_width, (unsigned int)tftSetup.tft_height);
+
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString("TFT SPI TEST", 4, 4, 2);
+  tft.drawString("ST7735 160x80", 4, 22, 1);
+  tft.fillRect(4, 42, 48, 12, TFT_RED);
+  tft.fillRect(56, 42, 48, 12, TFT_GREEN);
+  tft.fillRect(108, 42, 48, 12, TFT_BLUE);
+}
+
+void loop()
+{
+  delay(1000);
+}
+
+#else
+
+#include <lvgl.h>
 #include <Wire.h>
 #include <Bounce2.h>
 #include <INA.h>
@@ -11,9 +48,6 @@
 #define X_START_OFFSET 2
 #define OUT_EN_PIN 25
 #define FAN_CTL_PIN 14
-
-// 当前固件未驱动该引脚；GPIO26 同时用于编码器按键，不能兼作背光控制。
-#define LCD_BL 26
 
 #define PinA 19 // 左键引脚
 #define PinB 23 // 右键引脚
@@ -570,6 +604,19 @@ void setup()
 
   // TFT_eSPI 的控制器和引脚需由其 User_Setup 与实际硬件匹配。
   tft.begin();        /* TFT init */
+  setup_t tftSetup;
+  tft.getSetup(tftSetup);
+  Serial.println(F("\n--- Active TFT_eSPI setup ---"));
+  Serial.printf("Version: %s\n", tftSetup.version.c_str());
+  Serial.printf("Driver: 0x%03X, size: %u x %u\n",
+                (unsigned int)tftSetup.tft_driver, (unsigned int)tftSetup.tft_width,
+                (unsigned int)tftSetup.tft_height);
+  Serial.printf("SPI pins: MOSI=%d, MISO=%d, SCLK=%d, CS=%d, DC=%d, RST=%d\n",
+                tftSetup.pin_tft_mosi, tftSetup.pin_tft_miso, tftSetup.pin_tft_clk,
+                tftSetup.pin_tft_cs, tftSetup.pin_tft_dc, tftSetup.pin_tft_rst);
+  Serial.printf("SPI write frequency: %d.%d MHz\n",
+                tftSetup.tft_spi_freq / 10, tftSetup.tft_spi_freq % 10);
+  Serial.println(F("-----------------------------"));
   tft.setRotation(3); /* mirror */
 
   lv_disp_buf_init(&disp_buf, buf, NULL, LV_HOR_RES_MAX * 10);
@@ -741,3 +788,5 @@ void loop()
 
   delay(5);
 }
+
+#endif
