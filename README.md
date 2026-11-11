@@ -93,7 +93,18 @@ Based on netlist `Netlist_ESP32_库仑计_2026-06-08.enet`:
 
 > Note: Direct TTL connection to BMS protection board serial port. If the protection board uses RS485, an external converter is required. / 直接TTL连接电池保护板串口，若保护板为RS485需外加转接板。
 
+### 编码器
+| Function / 功能 | ESP32 Pin / 引脚 | Notes / 备注 |
+|----------|-----------|-------|
+| NTC Temp / NTC温度 | GPIO18 |  |
+| ADC Battery Voltage / 电池电压 | GPIO19 |  |
+| Unused / 未使用 | GPIO23 |  |
+
+
+
+
 ### Others / 其他
+
 | Function / 功能 | ESP32 Pin / 引脚 | Notes / 备注 |
 |----------|-----------|-------|
 | NTC Temp / NTC温度 | GPIO39 | U2.5, 10kΩ pull-up to 3.3V |
